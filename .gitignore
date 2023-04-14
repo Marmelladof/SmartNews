@@ -5,6 +5,8 @@ dataset/
 __pycache__/
 *.py[cod]
 *$py.class
+Lib/
+Scripts/
 
 # C extensions
 *.so
@@ -131,3 +133,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+pyvenv.cfg
