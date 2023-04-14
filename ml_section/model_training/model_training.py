@@ -10,19 +10,27 @@ from keras_preprocessing.sequence import pad_sequences
 
 
 # SPLITTING
-def split_data(texts, split_ratio_train_val, split_ration_val_test):
-    split_size_train = int(split_ratio_train_val * len(texts))
-    split_size_val_test = int(split_ration_val_test * len(texts))
-    return texts[:split_size_train], texts[split_size_train: split_size_val_test + split_size_train], texts[split_size_val_test + split_size_train:]  # noqa: E501
+def split_data(dataframe, train_ration, val_ration):
+    _true = dataframe.loc[dataframe.Fake == 'True']
+    _false = dataframe.loc[dataframe.Fake == 'False']
+    chunks = {"train": [], "val": [], "test": []}
+    length = len(dataframe.index)
+    train_stop = int(train_ration*length)
+    val_stop = int((val_ration + train_ration)*length)
+    chunks["train"].append(pd.concat([_true[:train_stop], _false[:train_stop]]))
+    chunks["val"].append(pd.concat([(_true[train_stop: val_stop]),
+                                     _false[train_stop: val_stop]]))
+    chunks["test"].append(pd.concat([_true[val_stop:], _false[val_stop:]]))
+    return chunks["train"][0], chunks["val"][0], chunks["test"][0]
 
 
 def train_model():
 
     df = pd.read_csv('dataset/fake-and-real-news-dataset/Fake.csv')
-    df['Fake'] = True
+    df['Fake'] = 'True'
 
     df_real = pd.read_csv('dataset/fake-and-real-news-dataset/True.csv')
-    df_real['Fake'] = False
+    df_real['Fake'] = 'False'
 
     df = pd.concat([df, df_real])
 
@@ -30,22 +38,24 @@ def train_model():
 
     df.reset_index()
 
-    # df_ = df.groupby(by=['Fake', 'subject'], sort=True).count()
-
-    # df_ = df.groupby('Fake').count()
-
     df_news = df[['title', 'text', 'Fake']]
     df_news['title_text'] = df['title'] + ' - ' + df['text']
 
     df_news = df_news[['title_text', 'Fake']]
 
-    news = np.array(df_news['title_text'])
+    # news = np.array(df_news['title_text'])
 
-    fakes = np.array(df_news['Fake'], dtype='str')
+    # fakes = np.array(df_news['Fake'], dtype='str')
     # len(news) == len(fakes)  # light check
 
-    train_text, validation_text, test_text = split_data(news, 0.8, .1)
-    train_label, validation_label, test_label = split_data(fakes, 0.8, 0.1)
+    train, validation, test = split_data(df_news, 0.05, .1)
+
+    train_text = np.array(train['title_text'])
+    train_label = np.array(train['Fake'])
+    validation_text = np.array(validation['title_text'])
+    validation_label = np.array(validation['Fake'])
+    test_text = np.array(test['title_text'])
+    test_label = np.array(test['Fake'])
 
     # TOKENIZING
     tokenizer = Tokenizer(num_words=10000, oov_token='<OOV>')
@@ -104,15 +114,6 @@ def train_model():
         tf.keras.layers.Dense(2, activation='softmax')
     ])
 
-    # tf.keras.layers.Embedding(vocab_size, dimesions),
-    # tf.keras.layers.Bidirectional(
-    #         tf.keras.layers.LSTM(32, return_sequences=True)),
-    # tf.keras.layers.BatchNormalization(),
-    # tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
-    # tf.keras.layers.Dropout(0.2),
-    # tf.keras.layers.Dense(512, activation='relu'),
-    # tf.keras.layers.Dense(2, activation='softmax')
-    # model.build()
     model.compile(loss=tf.keras.losses.categorical_crossentropy,
                   optimizer=tf.keras.optimizers.Adam(),
                   metrics=['accuracy'])

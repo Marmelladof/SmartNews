@@ -1,8 +1,13 @@
+keras==2.11.0
+Keras-Preprocessing==1.1.2
 numpy==1.24.0
 pandas==1.5.2
-Pillow==9.3.0
 scikit-learn==1.2.0
 scipy==1.9.3
-seaborn==0.12.1
-squarify==0.4.3
-django-cors-headers==3.13.0
+tensorboard==2.11.2
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.1
+tensorflow==2.11.0
+tensorflow-estimator==2.11.0
+tensorflow-intel==2.11.0
+tensorflow-io-gcs-filesystem==0.31.0
