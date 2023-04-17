@@ -20,7 +20,8 @@ def tokenizer(raw_input_data):
 
 
 def load_model():
-    model = keras.models.load_model('ml_section/resources/trained_models/model')
+    model = \
+        keras.models.load_model('ml_section/resources/trained_models/model')
     return model
 
 
@@ -32,7 +33,14 @@ def run_model(raw_input_data):
 if __name__ == '__main__':
     raw_input = {
         "Title": "New Martian technology discovered",
-        "Text": "After the Pope's last visit to the Andromeda Galaxy he took the oportunity to stop by Mars. Here he preached his new anti-abortion tactics and how he had managed to make homossecuality a crime in Europe, once more."
+        "Text": "After the Pope's last visit to the Andromeda Galaxy he took "
+        "the oportunity to stop by Mars. Here he preached his new "
+        "anti-abortion tactics and how he had managed to make homossexuality "
+        "a crime in Europe, once more. He is now making advances in driving "
+        "kids into shooting sprees in GOD's name all across the world. The "
+        "new cutting edge technolagy shared by the Martians allows them to "
+        "summon black holes wherever they wish and they got the world "
+        "trembling in fear of them."
     }
     input_data = tokenizer(raw_input)
     run_model(input_data)
