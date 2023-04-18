@@ -81,21 +81,25 @@ def split_data(dataframe, train_ration=0.4, val_ration=0.3):
     _false = dataframe.loc[dataframe.Fake == 1]
 
     chunks = {"train": [], "val": [], "test": []}
-    length = len(dataframe.index)
+    length_true = len(_true.index)
+    length_false = len(_false.index)
 
-    train_stop = int(train_ration*length)
-    val_stop = int((val_ration + train_ration)*length)
+    train_stop_true = int(train_ration*length_true)
+    train_stop_false = int(train_ration*length_false)
+    val_stop_true = int((val_ration + train_ration)*length_true)
+    val_stop_false = int((val_ration + train_ration)*length_false)
 
-    chunks["train"].append(pd.concat([_true[:train_stop],
-                                      _false[:train_stop]]))
-    chunks["val"].append(pd.concat([(_true[train_stop: val_stop]),
-                                    _false[train_stop: val_stop]]))
-    chunks["test"].append(pd.concat([_true[val_stop:], _false[val_stop:]]))
+    chunks["train"].append(pd.concat([_true[:train_stop_true],
+                                      _false[:train_stop_false]]))
+    chunks["val"].append(pd.concat([(_true[train_stop_true: val_stop_true]),
+                                    _false[train_stop_false: val_stop_false]]))
+    chunks["test"].append(pd.concat([_true[val_stop_true:],
+                                     _false[val_stop_false:]]))
 
     return chunks["train"][0], chunks["val"][0], chunks["test"][0]
 
 
-def data_preprocessing(df, df_real, train_ration=0.4, val_ration=0.3):
+def data_preprocessing(df, df_real, train_ration=0.45, val_ration=0.45):
 
     df = pd.concat([df, df_real])
 
@@ -107,12 +111,10 @@ def data_preprocessing(df, df_real, train_ration=0.4, val_ration=0.3):
     df_news['title_text'] = df['title'] + ' - ' + df['text']
 
     df_news = df_news[['title_text', 'Fake']]
-    
-    # CLEAN UP DATA
-    df_news['title_text'] = df_news['title_text'].apply(lambda x: remove_stopwords_and_url(x))
-    print(df_news.head())
-    
 
+    # # CLEAN UP DATA
+    # df_news['title_text'] = df_news['title_text'].apply(lambda x: remove_stopwords_and_url(x))  # noqa: E501
+    print(df_news.head())
 
     # news = np.array(df_news['title_text'])
 
@@ -197,10 +199,10 @@ def preprocessing(train_ration=None, val_ration=None):
 
 def preprocessing_for_test():
 
-    df = pd.read_csv('dataset/fake-and-real-news-dataset/Fake_pre.csv')
+    df = pd.read_csv('dataset/fake-and-real-news-dataset/Fake.csv')
     df['Fake'] = 1
 
-    df_real = pd.read_csv('dataset/fake-and-real-news-dataset/True_pre.csv')
+    df_real = pd.read_csv('dataset/fake-and-real-news-dataset/True.csv')
     df_real['Fake'] = 0
 
     padded_train_sequences, padded_val_sequences, padded_test_sequences, train_label, validation_label, test_label, word_index = data_preprocessing(df, df_real)  # noqa:E501

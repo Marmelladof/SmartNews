@@ -1,3 +1,3 @@
-from ml_section.model_training.model_training import train_model
+from ml_section.model_testing.model_testing import test_model_saved
 
-train_model()
+test_model_saved()

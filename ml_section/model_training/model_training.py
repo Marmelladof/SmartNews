@@ -6,14 +6,15 @@ from ml_section.model_testing.model_testing import test_model_trained
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
-  # Restrict TensorFlow to only use the first GPU
-  try:
-    tf.config.set_visible_devices(gpus, 'GPU')
-    logical_gpus = tf.config.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
-  except RuntimeError as e:
-    # Visible devices must be set before GPUs have been initialized
-    print(e)
+    # Restrict TensorFlow to only use the first GPU
+    try:
+        tf.config.set_visible_devices(gpus, 'GPU')
+        logical_gpus = tf.config.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+    except RuntimeError as e:
+        # Visible devices must be set before GPUs have been initialized
+        print(e)
+
 
 def train_model():
 
@@ -22,15 +23,15 @@ def train_model():
     vocab_size = 10000
     # vocab_size = len(word_index)
     with open("word_index.json", "w") as file:
-      import json
-      # Serializing json
-      json_object = json.dumps(word_index, indent=4)
-      file.write(json_object)
+        import json
+        # Serializing json
+        json_object = json.dumps(word_index, indent=4)
+        file.write(json_object)
     print(word_index)
     # len(word_index) # this variable only represents
     # how many vacalary form the word index we have used
     # to tokenize the sentences
-    
+
     # model.add(tf.keras.layers.Bidirectional(
     #             tf.keras.layers.LSTM(64, return_sequences=True)))
     # model.add(tf.keras.layers.Bidirectional(
@@ -55,7 +56,7 @@ def train_model():
                   metrics=['accuracy'])
     es_ = tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=3)
 
-    epochs = 10
+    epochs = 5
     # TRAINING MODEL
     history = model.fit(padded_train_sequences,
                         train_label,
