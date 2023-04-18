@@ -11,3 +11,5 @@ tensorflow==2.11.0
 tensorflow-estimator==2.11.0
 tensorflow-io-gcs-filesystem==0.31.0
 matplotlib==3.7.1
+nltk==3.8.1
+contractions==0.1.73
