@@ -76,7 +76,7 @@ def remove_stopwords_and_url(text):
 
 
 # SPLITTING
-def split_data(dataframe, train_ration=0.4, val_ration=0.3):
+def split_data(dataframe, train_ration=0.2, val_ration=0.2):
     _true = dataframe.loc[dataframe.Fake == 0]
     _false = dataframe.loc[dataframe.Fake == 1]
 
