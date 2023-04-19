@@ -8,7 +8,8 @@ from ml_section.model_training.model_training import train_model
 try:
     model = \
             keras.models.load_model('ml_section/resources/trained_models/model_final')  # noqa:E501
-except Exception:
+except Exception as e:
+    print(e)
     model = train_model()
 
 
@@ -34,11 +35,7 @@ def tokenizer(raw_input_data):
 
 def run_model(raw_input):
     input_data = tokenizer(raw_input)
-    try:
-        prediction = model.predict(x=input_data)
-    except Exception:
-        model = train_model()
-        prediction = model.predict(x=input_data)
+    prediction = model.predict(x=input_data)
     if prediction > 0.5:
         label = 'Fake'
     else:
