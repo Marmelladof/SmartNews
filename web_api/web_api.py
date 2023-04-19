@@ -51,14 +51,14 @@ class getModelPrediction(Resource):
 
         try:
             prediction, label = run_model(request_data)
-            message = {"prediction": prediction,
+            message = {"prediction": float(prediction[0]),
                        "label": label}
             print(f'The NEWS article provided is considered {label} with a certanty of {prediction}')  # noqa: E501
 
             response = {"success": True,
                         "message": message}
 
-            return Response(json.dumps(response), 200)
+            return Response(json.dumps(message), 200)
 
         except Exception as e:
             return Response(json.dumps(e), 404)
