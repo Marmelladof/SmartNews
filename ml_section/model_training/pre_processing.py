@@ -183,6 +183,17 @@ def data_preprocessing(df, df_real, train_ration=0.45, val_ration=0.45):
             1)
 
 
+def test_word_indexer(text):
+    with open("word_index.json", "w") as file:
+        import json
+        # Serializing json
+        json_object = json.load(file)
+
+    text_by_word = text.split()
+    tokens = [json_object[x] for x in text_by_word]
+    return tokens
+
+
 def preprocessing(train_ration=None, val_ration=None):
 
     df = pd.read_csv('dataset/fake-and-real-news-dataset/Fake.csv')

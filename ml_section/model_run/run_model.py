@@ -2,6 +2,7 @@
 import keras
 import numpy as np
 from ml_section.model_training.model_training import train_model
+from ml_section.model_training.pre_processing import test_word_indexer
 # from keras.preprocessing.text import Tokenizer
 # from keras_preprocessing.sequence import pad_sequences
 
@@ -14,10 +15,11 @@ except Exception as e:
 
 
 # TOKENIZING
+
 def tokenizer(raw_input_data):
     input_data = \
         np.array([str(raw_input_data["Title"] + raw_input_data["Text"])])
-
+    raw_input_data = test_word_indexer(raw_input_data)
     return input_data
 
 

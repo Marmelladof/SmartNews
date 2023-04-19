@@ -69,13 +69,20 @@ class getTextShort(Resource):
 
         request_data = request.json
 
-        if not isinstance(request_data["Text"], str):
-            response = {"success": False,
-                        "message": "Missing required fields."}
-            return Response(json.dumps(response), 404)
-
         try:
-            summary = summarize(request_data["Text"])
+            prediction, label = run_model(request_data)
+            message = {"prediction": float(prediction[0]),
+                       "label": label}
+            message = f'The NEWS article provided is considered {label} with a certanty of {prediction}'  # noqa: E501
+
+            if (message['label'] == 'False'):
+
+                response = {"success": True,
+                            "message": message}
+
+                return Response(message, 200)
+
+            summary = summarize(request_data)
             response = {"success": True,
                         "message": summary}
 
