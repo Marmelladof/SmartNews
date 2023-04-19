@@ -99,22 +99,18 @@ def train_model():
     history = model.fit(
                 x=padded_train_sequences,
                 y=train_label,
-                epochs=5,
+                epochs=epochs,
                 validation_data=(padded_val_sequences,
                                  validation_label),
                 shuffle=True,
                 callbacks=[callback])
 
-    model.save('ml_section/resources/trained_models/model')
+    model.save('ml_section/resources/trained_models/model_final')
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
     plt.plot(loss, 'b', label='train_loss')
     plt.plot(val_loss, 'orange', label='val_loss')
-
-    plt.legend()
-    plt.savefig(f'LOSS_train-{2}_test-{6}_epoch-{epochs}_vocab_size-{vocab_size}_pre.png')  # noqa:E501
-    plt.show()
 
     acc = history.history['accuracy']
     val_acc = history.history['val_accuracy']
@@ -123,7 +119,7 @@ def train_model():
     plt.plot(val_acc, 'orange', label='val-acc')
 
     plt.legend()
-    plt.savefig(f'LEARNING_train-{2}_test-{6}_epoch-{epochs}_vocab_size-{vocab_size}_pre.png')  # noqa:E501
+    plt.savefig('LEARNING_LOSS_image.png')  # noqa:E501
     plt.show()
 
     # TEST MODEL

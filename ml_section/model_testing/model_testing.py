@@ -75,6 +75,8 @@ def test_model_saved():
     plt.title('Confusion Matrix', fontsize=18)
     fig1.savefig("confusion_matrix_model.png")
 
+    return model
+
 
 if __name__ == '__main__':
     test_model_saved()

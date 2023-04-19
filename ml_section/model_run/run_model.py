@@ -1,11 +1,15 @@
-from tensorflow import keras
+# from tensorflow import keras
+import keras
 import numpy as np
+from ml_section.model_training.model_training import train_model
 # from keras.preprocessing.text import Tokenizer
 # from keras_preprocessing.sequence import pad_sequences
 
-
-model = \
-        keras.models.load_model('ml_section/resources/trained_models/model')
+try:
+    model = \
+            keras.models.load_model('ml_section/resources/trained_models/model_final')  # noqa:E501
+except Exception:
+    model = train_model()
 
 
 # TOKENIZING
@@ -30,7 +34,11 @@ def tokenizer(raw_input_data):
 
 def run_model(raw_input):
     input_data = tokenizer(raw_input)
-    prediction = model.predict(x=input_data)
+    try:
+        prediction = model.predict(x=input_data)
+    except Exception:
+        model = train_model()
+        prediction = model.predict(x=input_data)
     if prediction > 0.5:
         label = 'Fake'
     else:
